@@ -19,7 +19,9 @@ The dearth of prior experimental tests of retrospective voting is curious given 
 
 ## What's at stake?
 
-We outline a framework for studying retrospective voting and present eleven experimental tests centered around the integration-appraisal process. What do we expect to achieve? Our aim is to test competing theories of the mechanisms driving retrospective voting and, in so doing, to better understand the normative implications of retrospective voting for democratic accountability. After all, it is difficult to feel encouraged by observed patterns of retrospective voting if we cannot identify what exactly voters are responding to.
+We outline a framework for studying retrospective voting and present eleven experimental tests centered around the integration-appraisal process. What do we expect to achieve? Our aim is to test competing theories of the mechanisms driving retrospective voting and, in so doing, advance our understanding of the normative implications of retrospective voting. After all, it is difficult to feel encouraged by observed patterns of retrospective voting if we cannot identify what exactly voters are responding to.
+
+Second part: are individuals up to the task?
 
 Ongoing controversy surrounding the mechanisms driving the retrospective vote
 
