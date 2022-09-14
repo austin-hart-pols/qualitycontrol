@@ -1,0 +1,36 @@
+---
+title: "Quality control Sec1 scratch"
+author: "Austin Hart"
+date: "2022-09-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Why experiment?
+
+Nearly all prior studies of retrospective voting rely on observational designs. This work identifies a clear and widespread reaction among voters to indicators of performance. An increase in GDP growth, for example, ought to raise an incumbent's prospects of reelection. Yet fundamental questions remain about the micro foundations of this retrospective response. Unpacking the integration-appraisal process requires the researcher to identify the specific streams of performance information that voters encounter and then observe their response to each. Neither is typically feasible with observational data.
+
+An experimental approach offers a way forward. We use our framework to manipulate the parameters of government performance *and* spillover and then control individual exposure to these streams. Because we do this in a simplified environment that allows the integration and appraisal process to unfold with minimal intervention, we can design direct tests of competing mechanisms of retrospective voting.
+
+The dearth of prior experimental tests of retrospective voting is curious given the expansiveness of the literature and widespread adoption of experimental methods in research on voting behavior. We suspect that this reflects the difficulty of credibly manipulating streams of performance in an experimental setting. This is especially true if the researcher is also attempting to simulate an explicitly political competition among competing parties or candidates. As we develop further in Sections 2 and 3, our factory worker analogy overcomes these hurdles while still representing the key evaluative processes of performance voting.
+
+## What's at stake?
+
+We outline a framework for studying retrospective voting and present eleven experimental tests centered around the integration-appraisal process. What do we expect to achieve? Our aim is to test competing theories of the mechanisms driving retrospective voting and, in so doing, to better understand the normative implications of retrospective voting for democratic accountability. After all, it is difficult to feel encouraged by observed patterns of retrospective voting if we cannot identify what exactly voters are responding to.
+
+Ongoing controversy surrounding the mechanisms driving the retrospective vote
+
+limited by cognitive capacity, data availability, disinterest
+
+Central: these studies cannot tell us what retrospective voting means for democratic accountability and, where voters fail to sanction or reward incumbents, cannot say if it's because voters cannot or rather do not manage this task.
+
+We outline the integration-appraisal approach as a framework for studying retrospective voting and present eleven experimental tests within that space. Where does that get us?
+
+Why learn about the mechansim?
+
+When people fail as retrospective voters is it because they can't do it or rather that they're unable, prevented, etc.?
+
+What do we get wrong in ignoring the I/A framework? What did prior studies get wrong? Why does that matter so much for what we know about retrospective voting?
