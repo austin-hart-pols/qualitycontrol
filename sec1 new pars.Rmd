@@ -9,11 +9,25 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## What's at stake?
+
+We outline a framework for studying retrospective voting and present eleven experimental tests of its micro foundations. What do we expect to achieve? First, testing and advancing theories of retrospective voting sheds light on the normative significance of one of the most widely-observed patterns of voting behavior. What do we learn about the possibility of retrospective accountability when we observe, for example, an electorate sanctioning an incumbent in the midst of a recession? The answer depends entirely on the causal mechanisms at work. To the extent that the behavior reflects a haphazard, myopic, bias-prone, and/or naive reaction, retrospective voting is no source of optimism.
+
+Second, identifying the mechanism gives us insight into what it means when the retrospective vote wanes. If voters fail to sanction a poor performance, for example, is it a sign that they're incapable, uninterested, or what?
+
+Our aim is to test competing theories of the mechanisms driving retrospective voting and, in so doing, advance our understanding of the normative implications of retrospective voting.
+
+After all, it is difficult to feel encouraged by observed patterns of retrospective voting if we cannot identify what exactly voters are responding to.
+
+Second part: are individuals up to the task?
+
 ## Why experiment?
 
 Nearly all prior studies of retrospective voting rely on observational designs. This work identifies a clear and widespread reaction among voters to indicators of performance. An increase in GDP growth, for example, ought to raise an incumbent's prospects of reelection. Yet fundamental questions remain about the micro foundations of this retrospective response. Unpacking the integration-appraisal process requires the researcher to identify the specific streams of performance information that voters encounter and then observe their response to each. Neither is typically feasible with observational data.
 
 An experimental approach offers a way forward. We use our framework to manipulate the parameters of government performance *and* spillover and then control individual exposure to these streams. Because we do this in a simplified environment that allows the integration and appraisal process to unfold with minimal intervention, we can design direct tests of competing mechanisms of retrospective voting.
+
+Experiments aren't guaranteed to uncover this. Existing studies short-circuit the process by design and very few exist? What's up with that?
 
 The dearth of prior experimental tests of retrospective voting is curious given the expansiveness of the literature and widespread adoption of experimental methods in research on voting behavior. We suspect that this reflects the difficulty of credibly manipulating streams of performance in an experimental setting. This is especially true if the researcher is also attempting to simulate an explicitly political competition among competing parties or candidates. As we develop further in Sections 2 and 3, our factory worker analogy overcomes these hurdles while still representing the key evaluative processes of performance voting.
 
@@ -36,3 +50,7 @@ Why learn about the mechansim?
 When people fail as retrospective voters is it because they can't do it or rather that they're unable, prevented, etc.?
 
 What do we get wrong in ignoring the I/A framework? What did prior studies get wrong? Why does that matter so much for what we know about retrospective voting?
+
+## Wither social identity?
+
+Existing theories of retrospective voting say very little about how social identities may interact with the integration-appraisal process. They do, however, suggest that identities, especially partisan identity, may suppress the magnitude of the retrospective vote. That may be true.
