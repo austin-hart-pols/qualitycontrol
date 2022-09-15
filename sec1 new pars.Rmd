@@ -11,9 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## What's at stake?
 
-We outline a framework for studying retrospective voting and present eleven experimental tests of its micro foundations. What do we expect to achieve? First, testing and advancing theories of retrospective voting sheds light on the normative significance of one of the most widely-observed patterns of voting behavior. What do we learn about the possibility of retrospective accountability when we observe, for example, an electorate sanctioning an incumbent in the midst of a recession? The answer depends entirely on the causal mechanisms at work. To the extent that the behavior reflects a haphazard, myopic, bias-prone, and/or naive reaction, retrospective voting is no source of optimism.
+We outline a framework for studying retrospective voting and present eleven experimental tests of its micro foundations. What do we expect to achieve? Testing and advancing theories of retrospective voting sheds light on the normative significance of one of the most widely-observed patterns of voting behavior. What do we learn about the possibility of retrospective accountability, for example, when we observe voters sanctioning an incumbent in the midst of a recession? The answer depends on the causal mechanisms at work. To the extent that the behavior reflects a haphazard, bias-prone, and/or naive reaction, retrospective voting is no cause for optimism.
 
-Second, identifying the mechanism gives us insight into what it means when the retrospective vote wanes. If voters fail to sanction a poor performance, for example, is it a sign that they're incapable, uninterested, or what?
+Similarly, exploring the mechanisms of retrospective voting should offer insight into what it means when retrospective voting wanes. If voters fail to hold incumbents accountable for past performance, is it because they are incapable of managing the I/A task?
 
 Our aim is to test competing theories of the mechanisms driving retrospective voting and, in so doing, advance our understanding of the normative implications of retrospective voting.
 
