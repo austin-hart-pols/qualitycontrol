@@ -1,0 +1,44 @@
+---
+title: "Quality Control"
+subtitle: "Experiments on the microfoundations of retrospective voting"
+author: "Austin Hart, American University"
+institute: "J. Scott Matthews, Memorial University"
+output:
+  xaringan::moon_reader:    
+    css: [default, metropolis, default-fonts]
+    lib_dir: libs   
+    nature:
+      highlightStyle: googlecode
+      highlightLines: true
+      highlightLanguage: ["r"]
+      countIncrementalSlides: false      
+      ratio: "16:9"                      
+---
+
+```{r setup, include=FALSE}
+  options(htmltools.dir.version = FALSE)
+  knitr::opts_chunk$set(
+    message=F, warning=F, eval=T, echo=F, 
+    fig.align='center', dev="svglite", dpi=500
+  )
+  
+  library(tidyverse)
+  library(patchwork)
+  library(knitr)
+```
+
+# Retrospecting voting
+
+Some visual here of the relationship?
+
+---
+# Theories of Retrospective Voting
+
+### Integration-Appraisal Framework 
+
+- Foundation
+  - Voters integrate over streams of performance cues
+  - Voters render an appraisal of performance
+- Disagreement 
+  - How sensibly do voters manage the process
+

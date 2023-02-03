@@ -1,3 +1,3 @@
 # qualitycontrol
 
-Scratch paragraphs and edits for *Quality Control*
+Slide presentation for Quality Control
