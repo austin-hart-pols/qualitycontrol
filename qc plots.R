@@ -9,6 +9,8 @@
 library(tidyverse)
 library(magrittr)
 library(ggeffects)
+library(alpaca)
+library(lme4)
 library(patchwork)
 
 ## ggplot theme
@@ -38,22 +40,21 @@ library(patchwork)
     geom_smooth(method = 'lm', se = F, 
                 linetype=2, color = 'slateblue') +
     scale_y_continuous(limits = c(-15,25)) +
-    scale_x_continuous(limits = c(-1,7)) +
-    labs(x = "Income growth (%)",
+    scale_x_continuous(limits = c(-2,8)) +
+    labs(x = "RDI growth (%)",
          y = "Incumbent party vote margin") +
-    theme_classic(base_size = 12) +
-    theme(
-      panel.grid.minor = element_blank(),
-      panel.grid.major = element_blank()
-    )
+    mytheme +
+    theme(axis.line.x = element_line(color = 'gray20'))
 
+  rm(df)
   
 # COMP file -----------------  
 
   ## data
-  vf = 
-    read_csv(file = "xmerged.csv") %>%
-    filter(!econ %in% c(NA, 0.125, 0.875)) 
+  load('CoMP PxR.RData') # choice-level
+  ci = comp %>% # individual-level
+    filter(p.exec == 1) %>%
+    select(1:4,8:12,14)
 
   t1a = ci %>%
     group_by(econ) %>%
@@ -74,16 +75,14 @@ t1a %>%
   labs(x="National economy in past year...", 
        y="Vote for incumbent",
        title = "Individual level (n = 77,354)") +
-  theme_classic(base_size = 12) +
-  theme(plot.title = element_text(hjust = 0.5),
-        panel.grid.minor = element_blank(),
-        panel.grid.major.x = element_blank())
+  mytheme
 
   
   
   ci %>%
     ggplot(aes(x = econ, y = vote)) +
-    geom_smooth(se = F, method = "glm", method.args = list(family = "binomial")) +
+    geom_smooth(method = "glm", method.args = list(family = "binomial"),
+                se = F) +
     scale_x_continuous(breaks=c(0, 0.5, 1), 
                        labels=c("Much\nWorse", "Same", "Much\nBetter")) +
     scale_y_continuous(limits = c(0,1), breaks = c(0,.5,1)) +
@@ -96,18 +95,39 @@ t1a %>%
           panel.grid.major.x = element_blank())
 
 
+  ## Estimate models
+  e2 = glm(vote ~ econ + education + male + ideology + as_factor(e.id) + e.yr,
+           data = ci, family = binomial(link = 'logit')) # Inc Full
+    pp1 = tibble(ggpredict(e2,'econ')) # predicted probabilities
+  
+  e4 = glm(vote ~ wdi.econ + education + male + ideology + as_factor(e.id) + e.yr,
+           data = ci, family = binomial(link = 'logit')) # Inc Full
+    pp2 = tibble(ggpredict(e4, 'wdi.econ')) %>% # predicted probabilities
+      mutate(
+        group = '2',
+        x = (x-min(x))/(max(x)-min(x))
+      )
+  
+  ## plot
+  pdf = 
+    bind_rows(pp1,pp2) %>%
+    mutate(group = if_else(group == 1, 'Ind Eval','GNI growth'))
+    
+  pdf %>%
+    ggplot(aes(x = x, y = predicted, linetype = group)) +
+    geom_ribbon(aes(ymin = conf.low, ymax = conf.high), 
+                color = NA, fill = 'gray', alpha = 0.3) +
+    geom_line(color = 'black') +
+    scale_y_continuous(breaks = c(0,.5,1)) +
+    scale_color_manual(values = c('gray', 'black')) +
+    labs(x = 'Economy, past year',
+         y = 'Vote to reelect government',
+         title = 'Predicted probabilities, logit',
+         color = 'Measure', fill = 'Measure', linetype = 'Measure') +
+    mytheme +
+    theme(axis.text.x = element_blank(),
+          legend.position = c(.8,.2))
 
-e2 = glm(govvote ~ econ + edu + female + ideo + as_factor(mpcode) + yr,
-         data = vf, family = binomial(link = 'logit')) # Inc Full
-
-e4 = glm(govvote ~ wdi_gdpcapgr + edu + female + ideo + as_factor(mpcode) + yr,
-         data = vf, family = binomial(link = 'logit')) # Inc Full
-
-plot(ggpredict(e2, "econ"))
-plot(ggpredict(e4,'wdi_gdpcapgr'))
-
-new = tibble(ggpredict(e4,'wdi_gdpcapgr'))
-new2 = tibble(ggpredict(e2, 'econ'))
 new %>%
   ggplot(aes(x, predicted)) +
   geom_ribbon(aes(ymin = conf.low, 
@@ -118,15 +138,9 @@ new %>%
 
 
 
-# Set workspace -----------------------------------------------
 
-# load packages 
-library(magrittr)
-library(tidyverse)
-library(alpaca)
 
-# directory
-setwd("C:\\Users\\ahart\\Dropbox\\CoMP data")
+
 
 
 # Prep data ----------------------------------------------------
@@ -156,21 +170,19 @@ comp %<>%
 # Estimate -----------------------------------------------------
 
 # baseline  
-m2 <- 
-  ci %>% 
+m2 = 
+  comp %>% 
   #filter(data != "CES") %>%
   feglm(
-    vote ~ ideogap + outside + as.factor(p_family) + p_exec + 
-      exec_x_econ | r_id + e_id | e_id,
+    vote ~ ideogap + outside + as.factor(p.family) + 
+      p.exec + exec.econ | r.id + e.id | e.id,
     data = .,
     binomial("logit")
   )  
 
-summary(m2, type = 'clustered', cluster = ~e_id)
+summary(m2, type = 'clustered', cluster = ~e.id)
 rm(m2)  
 
-#m3 <- biasCorr(m2)
-#  summary(m3)
 
 
 
