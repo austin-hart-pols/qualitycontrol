@@ -19,7 +19,7 @@ output:
   options(htmltools.dir.version = FALSE)
   knitr::opts_chunk$set(
     message=F, warning=F, eval=T, echo=F, 
-    fig.align='center', dev="svglite", dpi=500
+    fig.align='center'
   )
   
   library(tidyverse)
@@ -42,3 +42,10 @@ Some visual here of the relationship?
 - Disagreement 
   - How sensibly do voters manage the process
 
+---
+# figure
+
+```{r, fig.dim=c(3,3)}
+magick::image_read_pdf("rvplot.pdf",
+                       pages = 1)
+```
