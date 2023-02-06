@@ -11,9 +11,10 @@
   library(magrittr)
   library(ggeffects)
   library(patchwork)
+  library(lme4)
 
   ## ggplot theme
-  mytheme = theme_classic(base_size = 12) +
+  mytheme = theme_classic(base_size = 11) +
     theme(
       plot.title = element_text(hjust = 0.5),
       panel.grid.minor = element_blank(),
@@ -54,27 +55,21 @@
   ## data
   load('CoMP PxR.RData') # choice-level
 
+  ## Estimates (20mins w ind REs; 45 w/nested)
+  comp$parfam = as.character(comp$p.family)
+  m3 = glmer(vote ~ ideogap + parfam +
+               p.exec * econ + (1 | e.id/r.id),
+             data = comp, family = binomial(link = 'logit'))
 
- 
-
-
-# Estimate -----------------------------------------------------
-
-
-comp$parfam = as.character(comp$p.family)
-m3 = glmer(vote ~ ideogap + parfam +
-             p.exec * econ + (1 | r.id) + (1 | e.id),
-           data = comp, family = binomial(link = 'logit'))
-
-pbase = m3@frame
-pbase$pp = predict(m3,type = 'response')
-pbm = pbase %>% 
-  filter(p.exec==1) %>%
-  group_by(econ) %>%
-  summarise(
-    n = n(),
-    mean = mean(pp)
-  )
+  pbase = m3@frame
+  pbase$pp = predict(m3,type = 'response')
+  pbm = pbase %>% 
+    filter(p.exec==1) %>%
+    group_by(econ) %>%
+    summarise(
+      n = n(),
+      mean = mean(pp)
+    )
 
 p2 = pbase %>%
   filter(p.exec == 1) %>%
@@ -84,13 +79,13 @@ p2 = pbase %>%
   geom_point(data = pbm, aes(x = econ, y = mean), color = 'black') +
   scale_y_continuous(limits = c(0,1), breaks = c(0,.5,1)) +
   scale_x_continuous(breaks = c(0,.5,1)) +
-  labs(y = 'Pr(Reelect Exec)',
+  labs(y = 'Pr(Vote|INC)',
        x = 'Economy, past year',
        title = 'Across voters & elections', 
-       caption = 'n=875,445; i=125,000, k = 100') +
+       caption = 'ME logit, n = 875,445, k = 100') +
   mytheme
 
-
+rm(comp,m3,pbase,pbm)
 
 
 # MEXICO -------------------------
@@ -106,21 +101,20 @@ p4 = ggpredict(mxm, 'ediff') %>%
   labs(x=expression(Delta~"Econ eval, w1-2"),
        y=expression(Delta~"Incumb Fav, w2-3"),
        title = 'Within voter',
-       caption = 'Mexico 2006, i = 1,980') + 
+       caption = 'Mexico 2006, n = 1,980') + 
   mytheme
   
-
+rm(mx,mxm)
 
 
 library(patchwork)
 layout <- "
-ABB
-ACC
+AABBB
+AACCC
 "
 rvplot = p1 + p2 + p4 + plot_layout(design = layout)
 ggsave(
-  filename ='rvplot.pdf',
+  filename ='rvplot.svg',
   plot = rvplot,
-  height = 5,
-  width = 6
+  height = 4, width = 7, dpi = 900
 )
