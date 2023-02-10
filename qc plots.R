@@ -8,17 +8,23 @@
 
   ## Required packages
   library(tidyverse)
-  library(magrittr)
   library(ggeffects)
   library(patchwork)
   library(lme4)
-
+  library(showtext)
+  
+  font_add_google('Noto Sans')
+  showtext_auto()
+  
   ## ggplot theme
-  mytheme = theme_classic(base_size = 11) +
+  mytheme = theme_minimal(base_size = 11) +
     theme(
-      plot.title = element_text(hjust = 0.5),
+      text=element_text(family = 'Noto Sans'),
+      plot.title = element_text(hjust = 0.5, face = 'bold'),
+      plot.subtitle = element_text(hjust = 0.5),
       panel.grid.minor = element_blank(),
-      panel.grid.major = element_blank()
+      panel.grid.major = element_blank(),
+      axis.text = element_blank()
     )
   
   
@@ -26,7 +32,7 @@
   
   ## data  
   df = 
-    haven::read_dta('presidents.dta') %>%
+    haven::read_dta('data/presidents.dta') %>%
     mutate(
       margin = # incumbent vote margin
         if_else(dem_inc==1, demvote-repvote,repvote-demvote)
@@ -36,15 +42,15 @@
   p1 =
     df %>%
     ggplot(aes(x=rdi, y=margin)) +
-    geom_text(aes(label=year), size = 4) +
+    geom_text(aes(label=year), size = 3) +
     geom_smooth(method = 'lm', se = F, 
-                linetype=2, color = 'slateblue') +
+                linetype=2, color = 'red') +
     scale_y_continuous(limits = c(-15,30)) +
-    scale_x_continuous(limits = c(-2,8)) +
+    scale_x_continuous(limits = c(-1,7.5)) +
     labs(x = "RDI growth (%)",
          y = "Inc-party margin",
          title = 'Across elections',
-         caption = 'US Pres, 1948-2008') +
+         subtitle = 'US Pres, 1948-2008') +
     mytheme
 
   rm(df)
@@ -53,68 +59,80 @@
 # COMP FILE -----------------  
 
   ## data
-  load('CoMP PxR.RData') # choice-level
-
-  ## Estimates (20mins w ind REs; 45 w/nested)
-  comp$parfam = as.character(comp$p.family)
+  load('data/CoMP PxR.RData') # choice-level
+  comp$parfam = as.character(comp$p.family) # for ease in reg
+  
+  ## Estimates (25mins)
   m3 = glmer(vote ~ ideogap + parfam +
                p.exec * econ + (1 | e.id/r.id),
              data = comp, family = binomial(link = 'logit'))
-
+  
+## Predicted prob, individual
   pbase = m3@frame
   pbase$pp = predict(m3,type = 'response')
-  pbm = pbase %>% 
-    filter(p.exec==1) %>%
-    group_by(econ) %>%
-    summarise(
-      n = n(),
-      mean = mean(pp)
-    )
+    rm(comp)
+  
+  ## Plot
+  p2 = pbase %>%
+    filter(p.exec == 1) %>%
+    ggplot(aes(x = econ, y= pp, group=econ)) +
+    geom_hline(aes(yintercept = 0.5), color = 'gray') +
+    geom_violin(draw_quantiles = 0.5, scale = 'count', adjust = 2, fill = 'lightblue') +
+    scale_y_continuous(limits = c(0,1), breaks = c(0,.5,1)) +
+    scale_x_continuous(breaks = c(0,.5,1),
+                       labels = c('Worse','Same','Better')) +
+    labs(y = 'Pr(Vote|INC)',
+         x = 'Economy, past year',
+         title = 'Voters * Parties * Elections', 
+         subtitle = 'ME logit, n = 875,445, k = 103') +
+    mytheme
 
-p2 = pbase %>%
-  filter(p.exec == 1) %>%
-  ggplot(aes(x = econ, y = pp)) +
-  geom_jitter(alpha=.2, color='gray', shape=1) +
-  geom_line(data=pbm, aes(x=econ, y=mean), color = 'red') +
-  geom_point(data = pbm, aes(x = econ, y = mean), color = 'black') +
-  scale_y_continuous(limits = c(0,1), breaks = c(0,.5,1)) +
-  scale_x_continuous(breaks = c(0,.5,1)) +
-  labs(y = 'Pr(Vote|INC)',
-       x = 'Economy, past year',
-       title = 'Across voters & elections', 
-       caption = 'ME logit, n = 875,445, k = 100') +
-  mytheme
+  rm(m3,pbase)
 
-rm(comp,m3,pbase,pbm)
-
-
+  
 # MEXICO -------------------------
 
-mx = haven::read_dta('mx06reg.dta')
+  ## Data
+  mx = haven::read_dta('data/mx06reg.dta')
 
-mxm = lm(thermdiff ~ therm2 + ediff + econ1 + pid1 + ideology1, data = mx)
+  ## Model
+  mxm = 
+    lm(thermdiff ~ therm2+ediff+econ1+pid1+ideology1,
+       data = mx)
 
-p4 = ggpredict(mxm, 'ediff') %>% 
-  plot() + 
-  scale_y_continuous(breaks = c(-30,-20,-10)) +
-  scale_x_continuous(breaks = c(-.5,0,.5)) +
-  labs(x=expression(Delta~"Econ eval, w1-2"),
-       y=expression(Delta~"Incumb Fav, w2-3"),
-       title = 'Within voter',
-       caption = 'Mexico 2006, n = 1,980') + 
-  mytheme
+  ## Plot
+  p3 = ggpredict(mxm, 'ediff') %>% 
+    tibble() %>%
+    ggplot(aes(x, y = predicted)) +
+    geom_ribbon(aes(ymin=conf.low,ymax=conf.high),fill='darkgreen', alpha = 1/4) +
+    geom_line(color = 'darkgreen')+
+    scale_y_continuous(breaks = c(-30,-20,-10)) +
+    scale_x_continuous(breaks = c(-.5,0,.5)) +
+    labs(x=expression(Delta~"Econ eval, w1-2"),
+         y=expression(Delta~"Incumb Fav, w2-3"),
+         title = 'Voters * panel wave',
+         subtitle = 'Mexico 2006, n = 1,980') + 
+    mytheme
   
-rm(mx,mxm)
+  rm(mx,mxm)
 
 
-library(patchwork)
-layout <- "
-AABBB
-AACCC
-"
-rvplot = p1 + p2 + p4 + plot_layout(design = layout)
-ggsave(
-  filename ='rvplot.svg',
-  plot = rvplot,
-  height = 4, width = 7, dpi = 900
-)
+# COMPOSITE ----------------------
+
+  ## layout
+  layout = "
+  AABBB
+  AACCC
+  "
+  
+  ## Arrange
+  rvplot = p1 + p2 + p3 + 
+    plot_layout(design = layout) &
+    theme(plot.margin = margin(4,4,6,4, unit = 'pt'))
+  
+  ## Export
+  ggsave(
+    filename ='figures/rvplot.svg',
+    plot = rvplot,
+    height = 5, width = 7, dpi = 900
+  )
