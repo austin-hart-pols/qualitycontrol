@@ -20,11 +20,11 @@
   mytheme = theme_minimal(base_size = 11) +
     theme(
       text=element_text(family = 'Noto Sans'),
-      plot.title = element_text(hjust = 0.5, face = 'bold'),
-      plot.subtitle = element_text(hjust = 0.5),
+      plot.title = element_text(face = 'bold'),
       panel.grid.minor = element_blank(),
       panel.grid.major = element_blank(),
-      axis.text = element_blank()
+      axis.text = element_blank(),
+      plot.title.position = 'plot'
     )
   
   
@@ -108,8 +108,8 @@
     geom_line(color = 'darkgreen')+
     scale_y_continuous(breaks = c(-30,-20,-10)) +
     scale_x_continuous(breaks = c(-.5,0,.5)) +
-    labs(x=expression(Delta~"Econ eval, w1-2"),
-         y=expression(Delta~"Incumb Fav, w2-3"),
+    labs(x=expression(Delta~"Econ eval, pre"),
+         y=expression(Delta~"Inc Fav, post"),
          title = 'Voters * panel wave',
          subtitle = 'Mexico 2006, n = 1,980') + 
     mytheme
