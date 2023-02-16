@@ -113,12 +113,12 @@ class: segue-yellow
 .pull-left-1[
 - Supervise new worker 
   - Fully\-trained 
-  - Type unknown
-  - Output variable  
-
+  - Type unknown, <br> $\mu_w \sim U(950,1450)$
+  - Output variable, <br> $Y_{wt} \sim N(\mu_w,250^2)$  
+  
 - Monitor for 16 'weeks'
 - Vote to reappoint/replace
-- $Bonus \propto Factory ~ output$
+- Bonus $\propto$ Factory output
 
 ]
 
@@ -136,7 +136,7 @@ class: segue-yellow
 - N = 248
 
 - Key design elements
-  - Competence $\mu_w \sim U(950,1450)$
+  - Type $\mu_w \sim U(950,1450)$
   - Output $Y_{wt} \sim N(\mu_w,250^2)$
 
 - Findings
@@ -148,7 +148,7 @@ class: segue-yellow
 .pull-right-2[
 
 ```{r fig3, out.width = '550px'}
-  knitr::include_graphics('figures/HartMatthewsFig3.png')
+  knitr::include_graphics('figures/study1sum.svg')
 ```
 ]
 
@@ -172,7 +172,7 @@ class: segue-yellow
 .pull-right-2[
 
 ```{r fig6, out.width = '550px'}
-  knitr::include_graphics('figures/HartMatthewsFig6.png')
+  knitr::include_graphics('figures/study4sum.svg')
 ```
 ]
 
