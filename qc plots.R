@@ -162,7 +162,7 @@
     scale_fill_viridis_d(option = 'cividis', direction = -1) +
     labs(x = NULL, y = 'Units per week',
          fill = NULL,
-         title = 'A. Incumbent competence') +
+         title = 'Incumbent competence') +
     mytheme + theme(legend.position = 'none', 
                     axis.text = element_text(),
                     panel.grid = element_blank())
@@ -170,20 +170,21 @@
   
   # Plot retention functions
   b = c4[['s1']] %>%
-    ggplot(aes(x = Avg, y = 100*Vote)) +
-    geom_hline(yintercept = 50, color = 'gray50') +
-    geom_smooth(method = 'lm', color = '#00204DFF') +
-    labs(x = "Average output", y = "Vote to reappoint (%)", 
-         title = 'B. Retention function') +
+    ggplot(aes(x = Avg, y = Vote)) +
+    geom_hline(yintercept = 0.50, color = 'gray50') +
+    geom_smooth(method = "glm", 
+                method.args = list(family = "binomial"), 
+                color = '#00204DFF') +
+    labs(x = "Average output", y = "Vote to reappoint (pr)", 
+         title = 'Response to treatment') +
     scale_x_continuous(limits = c(800,1600), breaks = c(900,1200,1500)) +
-    scale_y_continuous(breaks = seq(0,100,50)) +
-    coord_cartesian(ylim = c(-2, 102)) +
+    scale_y_continuous(breaks = seq(0,1,0.5), limits = c(0,1)) +
     mytheme + theme(legend.position = 'none',
                     axis.text = element_text(),
                     panel.grid = element_blank())
   
   # combine plots and export  
-  study1sum = a + b 
+  (study1sum = a + b)
   
   # Export
   ggsave(
@@ -362,7 +363,7 @@
     scale_fill_manual(values = c('#FFEA46FF','#7C7B78FF','#00204DFF')) +
     scale_linetype_manual(values = c(2,1,2)) +
     scale_y_continuous(breaks = seq(600,1500,300), limits = c(390,1710)) +
-    labs(x = NULL, y = 'Weekly output', title = 'A. Treatment profiles') +
+    labs(x = NULL, y = 'Weekly output', title = 'Treatment profiles') +
     mytheme + theme(legend.position = 'none',
                     panel.grid = element_blank(),
                     axis.text.y = element_text(),
@@ -373,22 +374,17 @@
 
   # Plot results of some sort
   # generate model ests
-  m = lm(Vote ~ Order + 0, data = c4$s4)
+  m = lm(Vote ~ Order, data = c4$s4) %>%
+    ggpredict(., terms = c("Order")) %>% tibble() %>%
+    mutate(x = factor(c('Early','Random','Late'), levels = c('Early','Random','Late')))
   
-  # estimates to tidy frame
-  s4est = summary(m)$coefficients %>%
-    data.frame(.) %>%
-    select(1,2) %>%
-    mutate(coef = as_factor(c('Early drop','Random','Late drop')), 
-           est = Estimate, se = Std..Error, .keep = 'unused') %>% 
-    tibble()
   
-  b = s4est %>%
-    ggplot(aes(x = coef, y = est, 
-               fill = coef, color = coef, shape = coef)) +
+  b = m %>%
+    ggplot(aes(x = x, y = predicted, 
+               fill = x, color = x, shape = x)) +
     geom_hline(aes(yintercept = 0.5), color = 'gray20') +
-    geom_errorbar(aes(ymin=est-1.96*se, ymax=est+1.96*se),
-                  width = 0.05, size = 1) +
+    geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                  width = 0.05, linewidth = 1) +
     geom_point(size = 2, color = 'gray25') +
     scale_shape_manual(values = c(21,22,21)) +
     scale_color_manual(values = c('#FFEA46FF','#7C7B78FF','#00204DFF')) +
@@ -396,9 +392,8 @@
     scale_y_continuous(breaks = seq(0,1,0.5), labels = scales::percent,
                        limits = c(-0.01,1),
                        expand = expansion(mult = c(0, 0.03))) +
-    scale_x_discrete(labels = c('Early','Random','Late')) +
     labs(x = NULL, y = 'Reappoint',
-         title = 'B. Vote for incumbent',
+         title = 'Response to treatment',
          shape = 'Treatment',
          fill = 'Treatment',
          color = 'Treatment') +
@@ -408,7 +403,7 @@
   # combine plots
   design = "AA
             BC"
-  study4sum = a + b + guide_area() + plot_layout(design = design, guides = 'collect')
+  (study4sum = a + b + guide_area() + plot_layout(design = design, guides = 'collect'))
   
   ## Export
   ggsave(
@@ -418,7 +413,7 @@
   )
  
   
-  rm(a,b,m,s4est,study4sum,s4i,design)    
+  rm(a,b,m,s4est,study4sum,s4i,design,c4)    
 
   
 # Chap 5 ------------------------------
@@ -429,8 +424,8 @@
   fd = 
     tibble(
       week = 1:16,
-      comp = rnorm(16,1055,250),
-      inc = c(rep(0,8),rnorm(8,1350,250)),
+      comp = rnorm(16,1400,250),
+      inc = c(rep(0,8),rnorm(8,1200,250)),
       fac = comp+inc
     ) %>%
     pivot_longer(-week,names_to = 'group', values_to = 'output')
@@ -443,11 +438,12 @@
     geom_line(data=filter(fd,week>8&group=='inc'),
               color='red',linewidth=1) +
     geom_vline(aes(xintercept = 8.5),color = 'gray') +
-    labs(x = ' ', y='Factory output',
-         title='A. Extraction design',
+    labs(x = ' ', y='Output',
+         title='Extraction design',
          subtitle='Incumbent joins the Comparator') +
     scale_x_continuous(limits = c(0.5,16.5),
-                       breaks = c(4,8,12)) +
+                       breaks = c(4.5,12.5),
+                       labels = c(expression(F[pre]==C),expression(F[post]==C+I))) +
     scale_y_continuous(limits = c(0,3500)) +
     coord_cartesian(expand =F) +
     mytheme +
@@ -461,16 +457,17 @@
     geom_area(data = filter(fd,group=='comp'&week<9),
               fill='gray30') +
     geom_vline(aes(xintercept = 8.5),color = 'gray') +
-    labs(x = ' ', y='Factory output',
-         title='B. Recognition design', 
+    labs(x = ' ', y='Output',
+         title='Recognition design', 
          subtitle='Incumbent replaces the Comparator') +
     scale_x_continuous(limits = c(0.5,16.5),
-                       breaks = c(4,8,12)) +
+                       breaks = c(4.5,12.5),
+                       labels = c(expression(F[pre]==C),expression(F[post]==I))) +
     scale_y_continuous(limits = c(0,3500)) +
     coord_cartesian(expand =F) +
     mytheme +
     theme(axis.text = element_text())
-  
+
   # patchwork
   (multi = pa / pb)
 
@@ -483,6 +480,65 @@
   
   rm(multi,pa,pb,fd)
   
+  ## Study 5 ----------------
+  
+  load(url("https://www.dropbox.com/s/c9safb3z4bib6wb/HartMatthewsJOP.RData?dl=1"))
+  
+  df1 = 
+    dfmain %>%
+    filter(Study == 1) 
+  
+  # Tests: differences/interaction effect 
+  fit = df1 %>%
+    mutate(NoiseS1 = relevel(as.factor(NoiseS1), ref = 'Low (100)')) %>%
+    glm(VoteB ~ NoiseS1*(AvgA + AvgAB), data = ., family = 'binomial') 
+  
+    my1 = ggpredict(fit, terms = c("AvgAB [800,900,1000,1100,1200,1300,1400,1500,1600]","NoiseS1")) 
+    p.b = ggplot(my1, aes(x, predicted, linetype = group)) +
+      geom_hline(aes(yintercept = .5), color = 'gray') +
+      stat_smooth(formula = y ~ s(x, k = 8), method = "gam", 
+                  se = F, color = 'black') +
+      scale_y_continuous(limits = c(0,1), breaks = c(0,.5,1)) +
+      scale_x_continuous(breaks = c(900,1200,1500)) +
+      scale_linetype_manual(
+        values = c('solid','dotted'),
+        name = NULL,
+      ) +
+      labs(
+        title = 'Incumbent-era output',
+        x = 'Factory Avg',
+        y = ' '
+      ) +
+      mytheme +
+      theme(axis.text.x = element_text())
+  
+    my2 = ggpredict(fit, terms = c("AvgA [800,900,1000,1100,1200,1300,1400,1500,1600]","NoiseS1")) 
+    p.a = ggplot(my2, aes(x, predicted, linetype = group)) +
+      geom_hline(aes(yintercept = .5), color = 'gray') +
+      stat_smooth(formula = y ~ s(x, k = 8), method = "gam", 
+                  se = F, color = 'black') +
+      scale_y_continuous(limits = c(0,1), breaks = c(0,.5,1)) +
+      scale_x_continuous(breaks = c(900,1200,1500)) +
+      scale_linetype_manual(
+        values = c('solid','dotted'),
+        name = NULL,
+      ) +
+      labs(
+        title = 'Pre-Incumbent output',
+        x = 'Factory Avg',
+        y = 'pr(Vote = Incumbent)'
+      ) +
+      mytheme +
+      theme(axis.text = element_text())
+    
+    study5sum = p.a + p.b + plot_layout(guides = 'collect') & theme(legend.position = 'bottom')
+    ggsave(
+      filename ='figures/study5sum.svg',
+      plot = study5sum,
+      height = 5, width = 6, dpi = 400
+    )
+    
+    
 # Chap 6 ------------------------------
   
   load('data/ch6 data.Rdata')
@@ -519,13 +575,13 @@
              value,
              'AvB' ~ 'Inc vs Comp',
              'B' ~ 'Inc avg',
-             'Y' ~ 'Bonus to date',
+             'Y' ~ 'Bonus',
              'A' ~ 'Comp avg',
              'None' ~ '(none)',
              .ptype = factor(levels = c('Inc vs Comp',
                                         'Inc avg',
                                         'Comp avg',
-                                        'Bonus to date',
+                                        'Bonus',
                                         '(none)'))
            ))
   
@@ -537,7 +593,7 @@
       x = NULL,
       y = NULL,
       fill = 'Task design',
-      title = 'A. Individual reports chosen'
+      title = 'Individual reports chosen'
     ) +
     scale_fill_viridis_d(option = 'inferno', direction = 1) +
     scale_y_continuous(breaks = seq(0, 100, 50),
@@ -555,7 +611,7 @@
       x = NULL,
       y = NULL,
       fill = 'Task design',
-      title = 'B. Combined selection'
+      title = 'Combined selection'
     ) +
     scale_fill_viridis_d(option = 'inferno', direction = 1) +
     scale_y_continuous(breaks = seq(0, 100, 50),
@@ -575,7 +631,7 @@
     AAAA
     BBBC
   "
-  study8sum = v8a + v8b + guide_area() + plot_layout(design = layout, guides = 'collect')
+  (study8sum = v8a + v8b + guide_area() + plot_layout(design = layout, guides = 'collect'))
   
   ggsave(
     filename ='figures/study8sum.svg',
@@ -583,5 +639,5 @@
     height = 5, width = 6, dpi = 400
   )
 
-  rm(v8a,v8b,study8sum,a,b,layout)  
+  rm(v8a,v8b,study8sum,a,b,layout,c6,c6f)  
   

@@ -64,7 +64,7 @@ class: center, middle, inverse, title-slide
 ---
 # Unexplored microfoundations
 
-### Can voters differentiate competent from incompetent incumbents?  
+### Can subjects differentiate competent from incompetent incumbents?  
 
 
 - Retrospective voting *requires*
@@ -100,9 +100,9 @@ Experts say that not only have economic conditions deteriorated a lot over the l
 ### Integration/Appraisal framework
 - Theoretical &amp; empirical lens for studying retrospective voting
 - 11 experiments allowing I/A to unfold
-  - Competency/biases (4 exps, n = 2,134)
-  - Confronting spillover (3, n = 1,767)
-  - Seeking and using performance cues (4, n = 3,408) 
+  - Competency/biases
+  - Confronting spillover
+  - Seeking and using performance cues 
 ]
 
 .pull-right[
@@ -116,7 +116,7 @@ Experts say that not only have economic conditions deteriorated a lot over the l
 ---
 class: segue-yellow
 
-# Competencies and biases in I/A
+# Capacity and bias in I/A
 
 
 ---
@@ -125,12 +125,12 @@ class: segue-yellow
 .pull-left-1[
 - Supervise new worker 
   - Fully\-trained 
-  - Type unknown, &lt;br&gt; `\(\mu_w \sim U(950,1450)\)`
-  - Output variable, &lt;br&gt; `\(Y_{wt} \sim N(\mu_w,250^2)\)`  
+  - Type unknown, &lt;br&gt; `\(\mu_{inc} \sim U(950,1450)\)`
+  - Output variable, &lt;br&gt; `\(Y_{inc,t} \sim N(\mu_{inc},250^2)\)`  
   
 - Monitor for 16 'weeks'
-- Vote to reappoint/replace
-- Bonus `\(\propto\)` Factory output
+- Vote to reappoint/replace 'Incumbent'
+- Bonus `\(\propto\)` factory output
 
 ]
 
@@ -148,8 +148,8 @@ class: segue-yellow
 - N = 248
 
 - Key design elements
-  - Type `\(\mu_w \sim U(950,1450)\)`
-  - Output `\(Y_{wt} \sim N(\mu_w,250^2)\)`
+  - `\(\mu_{inc} \sim U(950,1450)\)`
+  - Output `\(Y_{inc,t} \sim N(\mu_{inc},250^2)\)`
 
 - Findings
   - Subjects manage I/A
@@ -171,7 +171,7 @@ class: segue-yellow
 - N = 764
 
 - Key design elements
-  - Fixed type &amp; output
+  - Fixed type/output
   - Randomize timing of "drop"
   
 - Findings
@@ -190,6 +190,25 @@ class: segue-yellow
 
 # Confronting spillover in I/A
 
+
+---
+# Strategies for managing spillover
+
+### How--and how well--do voters differentiate competence from luck? 
+
+- Blind retrospection (Achen &amp; Bartels 2016)  
+  - No accounting for spillover
+  - RV as myopic, indiscriminant displacement
+
+- Rational discounting (Duch &amp; Stevenson 2008) 
+  - Voters discount by variance of spillover
+  - RV as sophisticated signal extraction
+  
+- Benchmark comparison (Kayser &amp; Peress 2012)  
+  - Competence in relative performance gap
+  - RV as low-info "social comparison" 
+
+
 ---
 # Multiworker designs
 
@@ -197,37 +216,25 @@ class: segue-yellow
 ### Game Flow
 1. Comparator begins
 2. Monitor factory output, `\(F_{pre}\)`
-3. Incumbent arrives in week 8
+3. Incumbent arrives in week 9
 4. Monitor factory output, `\(F_{post}\)`
 5. Vote on reappointment
 ]
 
 .pull-right-2[
-
-- Unmasking Design: Extract competece?
-  - `\(F_{pre} = C_{pre}\)`
-  - Incumbent works alongside Comparator
-  - `\(F_{post} = C_{post} + I_{post}\)` 
-
-- Recognition Design: Ignore spillover?
-  - `\(F_{pre} = C_{pre}\)`
-  - Comparator quits; Incumbent replaces 
-  - `\(F_{post} = I_{post}\)` 
+&lt;img src="figures/multidesign.svg" width="550px" style="display: block; margin: auto;" /&gt;
 ]
 
 
 ---
-# I/A strategies in context of spillover
+# Estimation and predictions
+
 
 &amp;nbsp;
 
-### Estimating response, multiworker games
-
-Model reappointment as function of output in each stage
-
 `$$Reappoint_i = \alpha F_{pre,i} + \beta F_{post,i} + \theta + u_i$$`
 
-### Predictions from conventional theories
+### Model predictions
 
 | Strategy       | Pre-Inc, `\(F_{pre}\)`  | Inc tenure, `\(F_{post}\)`   |
 |:---------------|---------------------|--------------------------|
@@ -235,6 +242,27 @@ Model reappointment as function of output in each stage
 | Rational discounting | `\(\alpha = 0\)` | `\(\beta&gt;0\)`, `\(\beta=f(\kappa)\)`  |
 | Benchmark comparison | `\(\alpha &lt; 0\)` | `\(\beta&gt;0\)` |
 
+
+---
+# Exp 5. Unmasking competence
+
+### Can subjects extract competencce from confounded stream? How?
+
+.pull-left-1[
+- N = 819  
+
+- Key design elements
+  - Randomize type\output
+  - Variance treatment `\(\sigma_{comp} \in (100,250)\)`
+  
+- Findings
+  - Capable signal extraction
+  - Benchmark processing
+]
+
+.pull-right-2[
+&lt;img src="figures/study5sum.svg" width="550px" style="display: block; margin: auto;" /&gt;
+]
 
 ---
 # Consistent benchmark response
@@ -278,7 +306,7 @@ Model reappointment as function of output in each stage
 ]
 
 .pull-right-2[
-.center[![](figures/HartMatthewsFig7.png)]
+&lt;img src="figures/study8sum.svg" width="550px" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -341,14 +369,11 @@ realism, some—but not all!—laboratory and survey experiments do not and thus
 
 |                       | Impact-estimating | Theory-testing    |
 |:----------------------|:------------------|:------------------|
-| Generalize to what?   | "Impact"          | Model             |
-|                       |                   |                   |
-| Nature of target      | Complex           | Simplified        |
+| Generalize to what?   | Impact/ATE        | Model             |
+| Nature of target      | Complex           | Minimalistic      |
 |                       | Context-bound     | "Universal"       |
-|                       |                   |                   |
 | Design to match       | Realistic         | Synthetic         | 
 |                       | Specific          | Abstract          |
-|                       |                   |                   |
 | Limitations           | Local             | Thin              |
 
 
@@ -364,9 +389,9 @@ realism, some—but not all!—laboratory and survey experiments do not and thus
   - Specify models &amp; *a priori* propositions under study  
 
 - Design
-  - Env captures only essential essence of the models
+  - Exp "world" captures only essential essence of the models
   - Creates space for contested behaviors to emerge
-  - Seeks to maximize experimental realism
+  - Experimental realism
 
 
 ---
@@ -380,8 +405,8 @@ class: sydney-red
   - Allowed to unfold in controlled settings
   
 - Findings from 11 experimental tests
-  - Not kicking dogs
-  - Not high sophistication
+  - Capacity beyond blind retrospection
+  - Sophistication below rational discounting
   - Strategic, imperfect benchmarking 
 
 - Next steps  
