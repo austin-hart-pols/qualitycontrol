@@ -164,9 +164,8 @@
          fill = NULL,
          title = 'A. Incumbent competence') +
     mytheme + theme(legend.position = 'none', 
-                    axis.text.x = element_text(),
-                            plot.title.position = 'plot',
-                            panel.grid = element_blank())
+                    axis.text = element_text(),
+                    panel.grid = element_blank())
   
   
   # Plot retention functions
@@ -180,10 +179,8 @@
     scale_y_continuous(breaks = seq(0,100,50)) +
     coord_cartesian(ylim = c(-2, 102)) +
     mytheme + theme(legend.position = 'none',
-                    axis.text.x = element_text(),
-                            panel.grid.minor = element_blank(),
-                            panel.grid.major = element_blank(),
-                            plot.title.position = 'plot')
+                    axis.text = element_text(),
+                    panel.grid = element_blank())
   
   # combine plots and export  
   study1sum = a + b 
@@ -192,7 +189,7 @@
   ggsave(
     filename ='figures/study1sum.svg',
     plot = study1sum,
-    height = 5, width = 7, dpi = 900
+    height = 5, width = 6, dpi = 400
   )
   
   rm(a,b,study1sum)
@@ -256,7 +253,7 @@
   study2sum
   
   ggsave(study2sum, file = 'study2sum.png', 
-         width = 6, height = 4, dpi = 1000) 
+         width = 5, height = 6, dpi = 400) 
   
   rm(a,b,d,c12,study2sum,design)  
   
@@ -324,47 +321,6 @@
                     plot.caption.position = 'plot',
                     plot.caption = element_text(hjust = 0))
   
-  
-  # Table of regression ests (OLS)
-  # generate model ests
-  m = c4$s3 %>% filter(IP_block == 0 & IP_country == 'United States') %>%
-    lm(Vote ~ relevel(Type,2), data = .)
-  mnames = c('(Neutral)','Negative','Positive') # var names saved as list
-  mn = glue::glue('N = {nobs(m)}. ') # number obs saved as text
-  
-  # estimates to tidy frame
-  b = summary(m)$coefficients %>%
-    data.frame(.) %>%
-    select(1,3,4) %>%
-    mutate(coef = mnames,
-           b = round(Estimate,3),
-           t = round(t.value,3), 
-           `p-value` = ifelse(`Pr...t..` < 0.001,
-                              glue::glue('< 0.001'),
-                              glue::glue('{round(`Pr...t..`/2,3)}')),
-           .keep = 'unused')
-  
-  # format for export in gt()
-  b =
-    rbind(b[b$coef!='(Neutral)',],b[b$coef=='(Neutral)',]) %>%
-    gt() %>%
-    tab_spanner(label = 'DV: Vote to reappoint', columns = 2:4) %>%
-    cols_label(coef = html("Treat (vs Neutral)")) %>%
-    cols_align(columns = `p-value`,align = 'right') %>%
-    tab_options(data_row.padding = px(1), table.font.size = 15) %>%
-    tab_footnote(
-      footnote = '1-tailed tests from pre-registered hypotheses.',
-      locations = cells_column_labels(`p-value`)
-    ) %>%
-    tab_header(title = html('<b>C. Hypothesis tests</b>')) %>%
-    opt_align_table_header(align = 'left')
-  
-  # save as png for later  
-  tmp = tempfile(fileext = '.png') #generate path to temp .png file
-  gtsave(b, tmp) #save gt table as png
-  table_png = png::readPNG(tmp, native = TRUE) # read tmp png file
-  
-  
   # text screen    
   text = paste("Week 7","Worker A produces 176 units","below the historical average.",sep='\n')
   p.t = tibble(x = 0:1,y=0:1) %>%
@@ -396,7 +352,7 @@
   s4i = read_csv('data/exp4 profiles.csv')
   a = s4i %>%
     ggplot(aes(x = wk, y = output, shape = treat, linetype = treat, color = treat, fill = treat)) +
-    geom_line(size = 1) +
+    geom_line(linewidth = 1) +
     geom_hline(aes(yintercept = 1200), color = 'gray50') +
     geom_segment(inherit.aes = F, aes(x = 5, xend = 20, y = 1580, yend = 1580),color = '#00204DFF') +
     geom_segment(inherit.aes = F, aes(x = 1, xend = 16, y = 500, yend = 500), color = '#FFEA46FF') +
@@ -408,9 +364,9 @@
     scale_y_continuous(breaks = seq(600,1500,300), limits = c(390,1710)) +
     labs(x = NULL, y = 'Weekly output', title = 'A. Treatment profiles') +
     mytheme + theme(legend.position = 'none',
-                            panel.grid = element_blank(),
-                            axis.text.x = element_blank(),
-                            plot.title.position = 'plot') +
+                    panel.grid = element_blank(),
+                    axis.text.y = element_text(),
+                    plot.title.position = 'plot') +
     annotate("text", x = 12.5, y = 1670, label = 'Late drop incumbent', size = 3) +
     annotate("text", x = 8.5, y = 410, label = 'Early drop incumbent', size = 3)
   
@@ -446,11 +402,8 @@
          shape = 'Treatment',
          fill = 'Treatment',
          color = 'Treatment') +
-    mytheme + theme(plot.title.position = 'plot',
-                            axis.text.x = element_blank(),
-                            panel.grid = element_blank(),
-                            plot.caption.position = 'plot',
-                            plot.caption = element_text(hjust = 0))
+    mytheme + theme(axis.text.y = element_text(),
+                    panel.grid = element_blank())
   
   # combine plots
   design = "AA
@@ -461,72 +414,112 @@
   ggsave(
     filename ='figures/study4sum.svg',
     plot = study4sum,
-    height = 5, width = 7, dpi = 900
+    height = 5, width = 6, dpi = 400
   )
  
   
-  rm(a,b,s4est,study4sum,s4i,design)    
+  rm(a,b,m,s4est,study4sum,s4i,design)    
   
+
+# Chap 6 ------------------------------
   
+  load('data/ch6 data.Rdata')
+    c6f = map(c6, ~filter(., full == TRUE))
   
-  # Bad tests with s1/s2 ----------------
+  # FctCaseWhen() - Create factor from case_when (maintaining level order)    
+    FctCaseWhen <- function(...) {
+      args <- as.list(match.call())
+      levels <- sapply(args[-1], function(f) f[[3]])  # extract RHS of formula
+      levels <- levels[!is.na(levels)]
+      factor(dplyr::case_when(...), levels = levels)
+    }
   
-  # gather data
-  c12 = 
-    bind_rows(
-      c4$s1 %>% select(study,Vote,Avg00,starts_with('w')),
-      c4$s2 %>% select(study,Vote,Avg00,starts_with('w'))
-    ) %>%
-    mutate(
-      avg4 = rowMeans(across(w13:w16))/100,
-      avg13 = rowMeans(across(w1:w12))/100,
-      avg1 = rowMeans(across(w1:4))/100,
-      avg24 = rowMeans(across(w5:16))
+  ## Study 8 ----------------
+
+  # get data, combined selections
+  b = c6f[['s8']] %>%
+    group_by(design) %>%
+    count(design,reportCombo) %>%
+    mutate(p = 100*n/sum(n),
+           value = fct_relevel(
+             reportCombo,
+             c('Benchmarked','Inc-centered','Irrelevant')
+           ))
+  
+  # get individual selections  
+  a = c6f[['s8']] %>%
+    select(rep1,rep2,design) %>%
+    pivot_longer(1:2) %>%
+    count(design,value) %>%
+    group_by(design) %>%
+    mutate(p = 200*n/sum(n),
+           value = case_match(
+             value,
+             'AvB' ~ 'Inc vs Comp',
+             'B' ~ 'Inc avg',
+             'Y' ~ 'Bonus to date',
+             'A' ~ 'Comp avg',
+             'None' ~ '(none)',
+             .ptype = factor(levels = c('Inc vs Comp',
+                                        'Inc avg',
+                                        'Comp avg',
+                                        'Bonus to date',
+                                        '(none)'))
+           ))
+  
+  # viz: selections
+  v8a = a %>%
+    ggplot(aes(x = value, y = p)) +
+    geom_col(aes(fill = fct_rev(design)), position = 'dodge', color = 'black', alpha =.85) +
+    labs(
+      x = NULL,
+      y = NULL,
+      fill = 'Task design',
+      title = 'A. Individual reports chosen'
+    ) +
+    scale_fill_viridis_d(option = 'inferno', direction = 1) +
+    scale_y_continuous(breaks = seq(0, 100, 50),
+                       labels = c('0','50','100%'),
+                       limits = c(0,100),
+                       expand = expansion(mult = c(0, .04))) +
+    mytheme +
+    theme(axis.text = element_text())
+  
+  # Combination viz  
+  v8b = b %>%
+    ggplot(aes(x = value, y = p)) +
+    geom_col(aes(fill = fct_rev(design)), position = 'dodge', color = 'black', alpha =.85) +
+    labs(
+      x = NULL,
+      y = NULL,
+      fill = 'Task design',
+      title = 'B. Combined selection'
+    ) +
+    scale_fill_viridis_d(option = 'inferno', direction = 1) +
+    scale_y_continuous(breaks = seq(0, 100, 50),
+                       labels = c('0','50','100%'),
+                       limits = c(0,100),
+                       expand = expansion(mult = c(0, .04))) +
+    mytheme +
+    theme(
+      plot.title.position = 'plot',
+      legend.position = 'none',
+      axis.text.y = element_text(),
+      axis.text.x = element_text(vjust = grid::unit(c(0, -2, 0), "points"))
     )
   
-  # recency bias
-  m12 = lm(Vote ~ avg13 + avg4, data = c12)
-  summary(m12) # conditional on q1-13, sig. boost for q4
-  stargazer::stargazer(m12, type = 'text', keep.stat = 'n', single.row = T,
-                       covariate.labels = c('Average, w1:12', 'Average, w13:16'))
+  # Patchwork
+  layout = "
+    AAAA
+    BBBC
+  "
+  study8sum = v8a + v8b + guide_area() + plot_layout(design = layout, guides = 'collect')
   
-  # now test equivalence  
-  car::linearHypothesis(m12, "avg13 = 3*avg4")
-  
-  # positive/negative deviations
-  c12b = c12 %>%
-    select(-(20:23)) %>%
-    na.omit() %>%
-    mutate(id = row_number(), .before = 1) %>%
-    pivot_longer(
-      5:20,
-      names_to = 'weeks',
-      values_to = 'output'
-    ) %>%
-    mutate(
-      deviation = output - 1200,
-      devPos = if_else(deviation >= 0, 'pos','neg')
-    ) %>%
-    group_by(id,devPos) %>%
-    mutate(
-      deviationAvg = mean(deviation)/100
-    ) %>%
-    ungroup() %>%
-    select(id,Vote,devPos,deviationAvg) %>%
-    unique() %>%
-    pivot_wider(
-      id_cols = c(id,Vote),
-      names_from = devPos,
-      values_from = deviationAvg
-    ) %>%
-    replace_na(list(neg = 0, pos = 0))
-  
-  # estimate
-  mb = lm(Vote ~ neg + pos, data = c12b)
-  summary(mb)    
-  car::linearHypothesis(mb, "neg = pos")
-  
-  stargazer::stargazer(mb, type = 'text', keep.stat = 'n', single.row = T,
-                       covariate.labels = c('Avg, sub-1200', 'Avg, plus-1200'))
-  
+  ggsave(
+    filename ='figures/study8sum.svg',
+    plot = study8sum,
+    height = 5, width = 6, dpi = 400
+  )
+
+  rm(v8a,v8b,study8sum,a,b,layout)  
   

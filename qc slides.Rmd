@@ -104,7 +104,7 @@ Experts say that not only have economic conditions deteriorated a lot over the l
 ---
 class: segue-yellow
 
-# Competencies and biases in I/A
+# Capacity and bias in I/A
 
 
 ---
@@ -161,7 +161,8 @@ class: segue-yellow
 - N = 764
 
 - Key design elements
-  - Fixed type & output
+  - Fixed type
+  - Fixed output
   - Randomize timing of "drop"
   
 - Findings
@@ -270,7 +271,9 @@ $$Reappoint_i = \alpha F_{pre,i} + \beta F_{post,i} + \theta + u_i$$
 ]
 
 .pull-right-2[
-.center[![](figures/HartMatthewsFig7.png)]
+```{r fig8, out.width = '550px'}
+  knitr::include_graphics('figures/study8sum.svg')
+```
 ]
 
 ---
