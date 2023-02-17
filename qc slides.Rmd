@@ -183,6 +183,17 @@ class: segue-yellow
 
 # Confronting spillover in I/A
 
+
+---
+# Strategies for managing spillover
+
+- Blind retrospection (Achen & Bartels)  
+  - 
+
+- Rational discounting (Duch & Stevenson) 
+
+- Benchmark comparison (Kayser & Peress)  
+
 ---
 # Multiworker designs
 
@@ -196,27 +207,17 @@ class: segue-yellow
 ]
 
 .pull-right-2[
-
-- Unmasking Design: Extract competece?
-  - $F_{pre} = C_{pre}$
-  - Incumbent works alongside Comparator
-  - $F_{post} = C_{post} + I_{post}$ 
-
-- Recognition Design: Ignore spillover?
-  - $F_{pre} = C_{pre}$
-  - Comparator quits; Incumbent replaces 
-  - $F_{post} = I_{post}$ 
+```{r multiflow, out.width = '550px'}
+  knitr::include_graphics('figures/multidesign.svg')
+```
 ]
 
 
 ---
-# I/A strategies in context of spillover
+# Estimating response, multiworker games
+
 
 &nbsp;
-
-### Estimating response, multiworker games
-
-Model reappointment as function of output in each stage
 
 $$Reappoint_i = \alpha F_{pre,i} + \beta F_{post,i} + \theta + u_i$$
 

@@ -419,8 +419,70 @@
  
   
   rm(a,b,m,s4est,study4sum,s4i,design)    
-  
 
+  
+# Chap 5 ------------------------------
+  
+  ## designs ----------------
+  
+  # mock factory data
+  fd = 
+    tibble(
+      week = 1:16,
+      comp = rnorm(16,1055,250),
+      inc = c(rep(0,8),rnorm(8,1350,250)),
+      fac = comp+inc
+    ) %>%
+    pivot_longer(-week,names_to = 'group', values_to = 'output')
+    
+  # extraction design
+  pa = filter(fd,group == 'fac') %>%
+    ggplot(aes(x=week,y=output)) +
+    geom_area(data=filter(fd,group=='fac'&week<=8),fill='gray30') +
+    geom_area(data=filter(fd,week>8&group=='fac'),fill='gray30') +
+    geom_line(data=filter(fd,week>8&group=='inc'),
+              color='red',linewidth=1) +
+    geom_vline(aes(xintercept = 8.5),color = 'gray') +
+    labs(x = ' ', y='Factory output',
+         title='A. Extraction design',
+         subtitle='Incumbent joins the Comparator') +
+    scale_x_continuous(limits = c(0.5,16.5),
+                       breaks = c(4,8,12)) +
+    scale_y_continuous(limits = c(0,3500)) +
+    coord_cartesian(expand =F) +
+    mytheme +
+    theme(axis.text = element_text())
+  
+  # recognition design    
+  pb = filter(fd, group=='inc') %>%
+    ggplot(aes(x=week,y=output)) +
+    geom_area(data=filter(fd,group=='inc'&week>8),
+              fill='red',alpha=.7) +
+    geom_area(data = filter(fd,group=='comp'&week<9),
+              fill='gray30') +
+    geom_vline(aes(xintercept = 8.5),color = 'gray') +
+    labs(x = ' ', y='Factory output',
+         title='B. Recognition design', 
+         subtitle='Incumbent replaces the Comparator') +
+    scale_x_continuous(limits = c(0.5,16.5),
+                       breaks = c(4,8,12)) +
+    scale_y_continuous(limits = c(0,3500)) +
+    coord_cartesian(expand =F) +
+    mytheme +
+    theme(axis.text = element_text())
+  
+  # patchwork
+  (multi = pa / pb)
+
+  # Export
+  ggsave(
+    filename ='figures/multidesign.svg',
+    plot = multi,
+    height = 5, width = 6, dpi = 400
+  )
+  
+  rm(multi,pa,pb,fd)
+  
 # Chap 6 ------------------------------
   
   load('data/ch6 data.Rdata')
