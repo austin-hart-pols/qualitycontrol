@@ -641,3 +641,21 @@
 
   rm(v8a,v8b,study8sum,a,b,layout,c6,c6f)  
   
+  glm(Vote ~ AvgA + AvgAB, family = 'binomial', data = c6f$s11)
+  summary(glm(Vote ~ avgPre00 + avgPost00, family = 'binomial', data = c6f$s9))
+  c6f$s9$avgPre00
+  
+
+  mods = list(
+    e5 = glm(VoteB ~ I(AvgA/100) + I(AvgAB/100), family = 'binomial', data = filter(dfmain, Study == 1)), # study 5
+    e6 = glm(VoteB ~ I(AvgA/100) + I(AvgAB/100), family = 'binomial', data = filter(dfmain, Study == 2)), # study 6
+    e7 = glm(VoteB ~ I(AvgA/100) + I(AvgAB/100), family = 'binomial', data = filter(dfmain, Study == 3)),  # study 7
+    e8e = glm(Vote ~ avgPre00 + avgPost00, family = 'binomial', data = filter(c6f$s8, design == 'Unmasking')), # STUDY 8 recognition
+    e8r = glm(Vote ~ avgPre00 + avgPost00, family = 'binomial', data = filter(c6f$s8, design == 'Recognition')), # STUDY 8 unmasking
+    e9e = glm(Vote ~ avgPre00 + avgPost00, family = 'binomial', data = filter(c6f$s9, design == 'Extraction')), # STUDY 9 unmasking
+    e9r = glm(Vote ~ avgPre00 + avgPost00, family = 'binomial', data = filter(c6f$s9, design == 'Recognition')), # STUDY 9 unmasking
+    e11 = glm(Vote ~ avgA00 + avgB00, family = 'binomial', data = c6f$s11) # STUDY 11
+  )  
+  stargazer::stargazer(mods, type = 'text')  
+  summary(dfmain$AvgPost)
+  

@@ -2,7 +2,7 @@
 title: "Quality Control"
 subtitle: "Experiments on the microfoundations of retrospective voting"
 author: "Austin Hart & J. Scott Matthews"
-date: "Forthcoming, Cambridge University Press"
+date: "2023, Cambridge University Press"
 output:
   xaringan::moon_reader:    
     css: ["default", "assets/sydney-fonts.css", "assets/sydney.css"]
@@ -243,7 +243,7 @@ $$Reappoint_i = \alpha F_{pre,i} + \beta F_{post,i} + \theta + u_i$$
 ### Can subjects extract competencce from confounded stream? How?
 
 .pull-left-1[
-- N = 819  
+- N = 849  
 
 - Key design elements
   - Randomize type\output
@@ -265,21 +265,21 @@ $$Reappoint_i = \alpha F_{pre,i} + \beta F_{post,i} + \theta + u_i$$
 
 &nbsp;
 
-$$Reappoint_i = \alpha F_{pre,i} + \beta F_{post,i} + \theta + u_i$$
+$$logit(Reappoint_i = 1) = \alpha F_{pre,i} + \beta F_{post,i} + \theta + u_i$$
 
 
 ### Estimates of I/A under interdependence
 
 | Study |	Design (n)  | $\hat{\alpha}$ | $Pr(\alpha \geq 0)$  | $\hat{\beta}$ | $Pr(\beta \leq 0)$ |
 |-------|:------------|----------|--------|---------|---------|
-| 5	| Unmasking (819) |	-0.093 |	< 0.001 |	0.135	| < 0.001 |
-| 6	| Recognition (368) |	-0.055 |	< 0.001 |	0.123	| < 0.001 |
-| 7	| Unmasking (550) |	-0.114 |	< 0.001	| 0.158	| < 0.001 |
-| 8	| Unmasking arm (173) |	-0.129 |	< 0.001 |	0.151	| < 0.001 |
-|	  | Recognition arm (217) |	-0.065 |	< 0.001 |	0.153	| < 0.001 |
-| 9	| Unmasking arm (894)	| -0.138 |	< 0.001	| 0.192	| < 0.001 |
-| 	| Recognition arm (182) |	-0.047 |	< 0.001 |	0.156	| < 0.001 |
-| 11 |	Dual stream (918) |	-0.182 |	< 0.001	| 0.131	| < 0.001 |
+| 5	| Unmasking (849)       |	-0.59 |	< 0.001 |	0.86	| < 0.001 |
+| 6	| Recognition (368)     |	-1.12 |	< 0.001 |	1.56	| < 0.001 |
+| 7	| Unmasking (550)       |	-0.62 |	< 0.001	| 0.87	| < 0.001 |
+| 8	| Unmasking arm (473)   |	-0.49 |	< 0.001 |	0.68	| < 0.001 |
+|	  | Recognition arm (247) |	-0.47 |	< 0.001 |	1.03	| < 0.001 |
+| 9	| Unmasking arm (894)	  | -0.26 |	< 0.001	| 0.54	| < 0.001 |
+| 	| Recognition arm (482) |	-0.28 |	< 0.001 |	0.90	| < 0.001 |
+| 11 |	Dual stream (920)   |	-0.80 |	< 0.001	| 0.57	| < 0.001 |
 
 
 
@@ -368,8 +368,8 @@ realism, some—but not all!—laboratory and survey experiments do not and thus
 |                       | Impact-estimating | Theory-testing    |
 |:----------------------|:------------------|:------------------|
 | Generalize to what?   | Impact/ATE        | Model             |
-| Nature of target      | Complex           | Minimalistic      |
-|                       | Context-bound     | "Universal"       |
+| Nature of target      | Complex           | "Universal"       |
+|                       | Context-bound     |                   |
 | Design to match       | Realistic         | Synthetic         | 
 |                       | Specific          | Abstract          |
 | Limitations           | Local             | Thin              |
